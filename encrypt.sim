@@ -1,0 +1,24 @@
+begin
+    character char_in_word;
+    integer char_number, cryptadd;
+    cryptadd := 13;
+
+    outtext("Write a word to be encrypted > "); breakoutimage;
+    inimage;
+    char_in_word := inchar;
+
+    while letter(char_in_word) do 
+        begin
+            char_number := rank(char_in_word) + cryptadd;
+            if char_in_word le 'Z'
+                and char_number > rank('Z')
+                then char_number := char_number - rank('Z') + rank('A') - 1
+            else if char_number > rank('z')
+                then char_number := char_number - rank('z') + rank('a') - 1;
+            outchar(char(char_number));
+            char_in_word := inchar;
+        end;
+    
+    outtext(" is the encrypted word.");
+    outimage;
+end
