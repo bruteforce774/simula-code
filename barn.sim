@@ -24,11 +24,12 @@ begin
                 begin
                     outtext("Navn på neste barn? "); 
                         breakoutimage; inimage;
+                        Navn :- blanks(30);
                         Navn := intext(30).strip;
                     outtext("Fødselsdato (åå mm dd)? ");
                         breakoutimage; inimage;
                         aar := inint; mnd := inint; dag := inint;
-                    outtext("Vekt?"); 
+                    outtext("Vekt? "); 
                         breakoutimage; inimage;
                         Vekt := inreal;
                     outtext("Pike? Skriv j eller n: ");
