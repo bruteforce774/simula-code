@@ -1,0 +1,67 @@
+begin
+    class barn;
+    begin
+        text Navn;
+        integer aar, mnd, dag;
+        real Vekt;
+        Boolean Pike;
+    end;
+
+    ref(barn) array K(1:300);
+    integer antallbarn;
+
+    Boolean flerebarn; integer bnr;
+
+    outtext("Skriv data om barna."); outimage;
+
+    flerebarn := true;
+    while flerebarn do
+        begin
+            antallbarn := antallbarn + 1;
+            K(antallbarn) :- new barn;
+
+            inspect K(antallbarn) do
+                begin
+                    outtext("Navn på neste barn? "); 
+                        breakoutimage; inimage;
+                        Navn := intext(30).strip;
+                    outtext("Fødselsdato (åå mm dd)? ");
+                        breakoutimage; inimage;
+                        aar := inint; mnd := inint; dag := inint;
+                    outtext("Vekt?"); 
+                        breakoutimage; inimage;
+                        Vekt := inreal;
+                    outtext("Pike? Skriv j eller n: ");
+                        breakoutimage; inimage;
+                        if inchar = 'j' then Pike := true
+                        else Pike := false;
+                end inspect K(antallbarn);
+
+            if antallbarn = 300 then
+                flerebarn := false
+            else
+                begin
+                    outtext("Flere barn? (skriv n om ikke) ");
+                    breakoutimage; inimage;
+                    if inchar = 'n' then flerebarn := false;
+                end;
+        end;
+
+    for bnr := 1 step 1 until antallbarn do
+        inspect K(bnr) do
+        begin
+            outtext("Navn: "); outtext(Navn);
+            if Pike then outtext (" (pike)")
+            else outtext("(gutt)");
+            outimage;
+            outtext(" Født ");
+                outint(dag,2); outchar('.');
+                outint(mnd,2);
+                outtext(" 19"); outint(aar,3);
+            outtext(" Vekt: ");
+                outfix(Vekt,2,6); outtext(" kg. ");
+            outimage;
+        end;
+    outimage;
+
+end
