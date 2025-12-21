@@ -1,0 +1,33 @@
+! Class hierarchy examples
+! Demonstrates subclasses and inheritance
+
+! Example 1: Basic class hierarchy with AA, BB, CC, DD, EE
+class AA; begin ( Declarations of AA-attributes ) end of AA;
+AA class BB; begin ( Declarations of BB-attributes ) end of BB;
+AA class CC; begin ( Declarations of CC-attributes ) end of CC;
+CC class DD; begin ( Declarations of DD-attributes ) end of DD;
+CC class EE; begin ( Declarations of EE-attributes ) end of EE;
+
+! These five classes form the hierarchy represented in Figure 9.6. AA is a
+! perclass of the four other classes, CC is a superclass of DD and EE, and EE
+! is a subclass of both AA and CC.
+
+! There is no limit to the height of a class hierarchy.
+! Every object of a subclass is said to inherit the attributes declared in
+! its superclass (or superclasses, should the subclass be deep down in a class
+! hierarchy). In addition to what it inherits from superclasses, an object that
+! is in a subclass has the attributes declared in the subclass. For example, if
+! we declare five ref-variables AA_var, BB_var, CC_var, DD_var and EE_var (the
+! first with type ref(AA), the second with type ref(BB), etc.), and execute the
+! reference assignments:
+!
+! AA_var :- new AA; BB_var :- new BB; CC_var :- new CC;
+! DD_var :- new DD; EE_var :- new EE;
+
+! the situation would be as shown in Figure 9.7. For instance the object referred
+! to by EE_var has three sets of attributes: the inheritance from the super-
+! superclass' AA; the inheritance from the superclass CC; and the attributes of
+! the class EE.
+
+! Observe that an object in a subclass is usually larger (in the sense that it
+! contains more attributes) than an object in the superclass.

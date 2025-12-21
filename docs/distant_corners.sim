@@ -1,0 +1,20 @@
+! Example showing reference parameters may be transmitted
+! procedure distant_corners - finds the two corners in a polygon that are farthest apart
+
+! An example showing that reference parameters may be transmitted by
+! procedure distant_corners(p, q); name p, q; ref(Point) p, q;
+! Finds the two corners in this polygon that are farthest apart, and assigns
+! their references to p and q;
+begin integer i, j; real dist, max_dist;
+    max_dist := -1;
+    for i := 1 step 1 until number_of_points do
+        for j := i + 1 step 1 until number_of_points do
+        begin
+            dist := corner(i).distance(corner(j));
+            if dist > max_dist then
+            begin
+                p :- corner(i); q :- corner(j);
+                max_dist := dist;
+            end;
+        end;
+end of distant_corners;

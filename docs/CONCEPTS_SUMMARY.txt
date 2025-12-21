@@ -1,0 +1,619 @@
+================================================================================
+SIMULA CHAPTER 9: OBJECTS AND CLASSES - CONCEPT SUMMARY
+from "Object-Oriented Programming With Simula" by Bjørn Kirkerud (1989)
+================================================================================
+
+INTRODUCTION
+------------
+This chapter introduces the fundamental concepts of object-oriented programming
+as they first appeared in Simula. Many concepts here will be familiar to C++/
+C#/Java developers, but the syntax and some semantics differ significantly.
+
+KEY TERMINOLOGY (Simula vs Modern OOP)
+--------------------------------------
+Simula Term          | Modern Equivalent    | Notes
+---------------------|----------------------|----------------------------------
+Class                | Class                | Template/pattern for objects
+Object               | Object/Instance      | Instance of a class
+Attribute            | Member/Field         | Variables and procedures in class
+Procedure            | Method               | Function associated with a class
+ref(ClassName)       | ClassName*           | Reference/pointer type
+:-                   | =                    | Reference assignment operator
+==                   | ==                   | Reference equality (identity)
+=/=                  | !=                   | Reference inequality
+none                 | null/nullptr         | No reference
+new ClassName        | new ClassName()      | Object instantiation
+Remote access        | Member access        | Using dot notation (.)
+Superclass           | Base class           | Parent in inheritance hierarchy
+Subclass             | Derived class        | Child in inheritance hierarchy
+
+
+1. BASIC CLASS DECLARATION
+--------------------------
+Syntax:
+    class Class_name;
+    begin
+        ( Declarations of attributes );
+    end of Class_name;
+
+Key Points:
+- Classes define patterns (templates) for objects
+- Objects that conform to a pattern are said to be "in" the class
+- Objects "belong to" the class
+- A class defines a set of all objects that belong to it as members
+
+Example:
+    class Place;
+    begin
+        real longitude, latitude;
+        procedure read; ...
+        procedure write; ...
+    end of Place;
+
+
+2. OBJECT GENERATION
+--------------------
+Syntax:
+    new Class_name
+
+Process when "new Class_name" is evaluated:
+1. A block of storage cells is allocated in primary store
+2. Each variable in the class is assigned an initial value based on its type
+3. The address of this block becomes the value of "new Class_name"
+
+Key Points:
+- The programmer doesn't manage where the storage is placed
+- Storage management is handled automatically by the runtime
+- The block allocated is called the "data part" of the object
+- Objects contain variables and arrays, but procedures/classes are shared
+  (only one copy exists for efficiency)
+
+
+3. REFERENCE TYPES
+------------------
+Syntax:
+    ref(Class_name)
+
+This declares a reference type - a new type distinct from the five built-in
+types (integer, real, character, Boolean, text).
+
+Variable Declaration:
+    ref(Class_name) variable_name;
+
+Key Points:
+- Reference variables contain either:
+  a) A reference (address/pointer) to an object in the class, OR
+  b) 'none' (meaning no reference)
+- Sometimes called "reference variable refers to" the object
+- References are like pointers in C/C++, but safer
+
+
+4. REFERENCE ASSIGNMENT
+-----------------------
+Syntax:
+    reference_variable :- reference_expression
+
+Important: Note the special operator ":-" (not "=" which is for value types!)
+
+Process:
+1. The reference expression on the right is evaluated
+2. The result is assigned as the new content to the variable on the left
+
+Example:
+    Rockall :- new Place;
+    my_budget :- your_budget;  ! Both now refer to same object
+
+Critical Distinction:
+- Between references and values of built-in types
+- Values of built-in types (integers, reals, etc.) can be represented 
+  as sequences of characters visible on a terminal
+- References cannot be displayed this way
+- References work "behind the scenes"
+
+
+5. REFERENCE EXPRESSIONS
+-------------------------
+A reference expression can be:
+
+a) Reference literal 'none':
+   - The only reference literal in Simula
+   - Used as initial (default) content of reference variables
+   - Analogous to null/nullptr in modern languages
+
+b) Reference variable:
+   - A variable of type ref(Class_name)
+   - Contains the reference last assigned to it, or 'none'
+
+c) Object generator:
+   - Expression: new Class_name
+   - Creates a new object and returns its reference
+
+d) Invocation of a function:
+   - Functions can return references as values
+
+e) Local object:
+   - Expression: this Class_name
+   - Explained in Section 9.11
+
+f) Qualified reference:
+   - Expression: Unconditional reference expression qua Class_name
+   - Explained in Section 9.11
+
+g) Conditional reference expression:
+   - Syntax:
+       if Boolean_expression
+       then Unconditional_reference_expression
+       else Reference_expression
+   - Value determined in obvious way
+
+
+6. REMOTE ACCESS OF ATTRIBUTES
+-------------------------------
+Syntax:
+    Reference_expression . attribute_name
+
+This is "dot notation" - familiar from C++/Java/C#.
+
+Process:
+- Gives access to attribute_name of the object referred to by Reference_expression
+- Must be a reference to an object in a class which possesses that attribute
+- If Reference_expression is 'none' or refers to object without that attribute,
+  program is stopped with error message
+
+Examples:
+    Rockall.latitude := 57.67;
+    Rockall.longitude := -13.50;
+    Rockall.write;
+    your_budget.read;
+    outtext("In your worst month, your expenses are: ");
+    outint(find_min_in_array(your_budget.expenses_per_month, 1, 12), 0);
+
+Key Points:
+- Remote access is frequently called "dot notation"
+- Variable attributes (latitude, longitude), procedure attributes (write, read),
+  and array attributes (expenses_per_month) may all be remotely accessed
+- Class AA is assumed to contain declarations of variable var_name, array arr_name,
+  and procedure proc_name
+- ref_AA is a variable of type ref(AA)
+- After ref_AA :- new AA:
+  * ref_AA.var_name may be used wherever a variable of var_name's type may be used
+  * ref_AA.arr_name may be used wherever an array of arr_name's type may be used
+  * ref_AA.proc_name may be used wherever a procedure with proc_name's 
+    parameters may be used
+
+
+7. INSPECTING OBJECTS
+----------------------
+The "inspect" imperative provides temporary direct access to attributes
+without using dot notation.
+
+Three Forms:
+
+Form 1 - Simple inspect:
+    inspect reference_expression do
+        Imperative_1;
+
+Form 2 - Inspect with otherwise:
+    inspect reference_expression do
+        Imperative_1;
+    otherwise
+        Imperative_2;
+
+Form 3 - Type-based inspect:
+    inspect reference_expression
+        Class_name_1 do Imperative_1
+        Class_name_2 do Imperative_2
+        ...
+        when Class_name_n do Imperative_n
+        otherwise Imperative_ow;
+
+Execution (Forms 1 & 2):
+1. The reference_expression is evaluated
+2. If result is a reference to an object (not 'none'), Imperative_1 is executed
+   Inside Imperative_1, every attribute declared in the class may be used
+   without dotting
+3. If result is 'none' and there's an otherwise clause, Imperative_2 is executed
+
+
+8. CLASSES WITH PARAMETERS
+---------------------------
+Syntax:
+    class Class_name(List of formal parameters);
+    ( Specifications of formal parameters );
+    begin
+        ( Declarations of attributes );
+    end of Class_name;
+
+Key Points:
+- Parameters to a class are attributes of the objects in the class
+- Can be treated like other attributes (inspected, assigned new values)
+- Used to specify bounds of arrays in objects or to have parameters that
+  uniquely identify objects in the class
+- Parameters can prompt user to enter values to data attributes
+
+To Generate Objects:
+    new Class_name(List of actual parameters)
+
+Restrictions:
+1. Only variables and arrays may be used as parameters (procedures cannot)
+2. Name-transmitted parameters are not allowed in classes
+
+Example:
+    class Country(number_of_places); integer number_of_places;
+    begin
+        integer number_of_inhabitants; 
+        real area;
+        ref(Place) array Places(1 : number_of_places);
+        ...
+    end of Country;
+
+Usage:
+    Countries(country_number) 
+        :- new Country(prompt_for_int("How many places? "));
+
+
+9. CLASSES WITH IMPERATIVES
+----------------------------
+Imperatives that are part of a class declaration are executed every time
+an object in the class is generated.
+
+Purpose:
+- Frequently used to initialize the data structure of objects
+- Prompt user for values of data attributes
+
+Example:
+    class Person(ident_number); integer ident_number;
+    begin
+        integer day, month, year;
+        outtext("Enter birth date for person number ");
+        outint(ident_number, 0); outimage;
+        day := prompt_for_int("Day? ");
+        month := prompt_for_int("Month? ");
+        year := prompt_for_int("Year? ");
+    end of Person;
+
+When "new Person(person_number)" is evaluated:
+- The imperatives execute with ident_number = person_number
+- User is prompted for birth date information
+
+
+10. REFERENCES AS PARAMETERS AND FUNCTION VALUES
+-------------------------------------------------
+References can be:
+- Used as parameters to procedures, functions, and classes
+- Produced as values of functions
+
+Just like built-in types!
+
+Examples:
+
+As Procedure Parameter:
+    real procedure distance(p); ref(Point) p;
+    distance := sqrt((x - p.x)**2 + (y - p.y)**2);
+
+As Function Return Value:
+    ref(Point) procedure midpoint(p); ref(Point) p;
+    midpoint :- new Point((x + p.x)/2, (y + p.y)/2);
+
+As Class Parameter:
+    class Chord(p, q); ref(Point) p, q;
+    begin
+        real procedure length;
+        length := p.distance(q);
+    end of Chord;
+
+
+11. PARAMETER TRANSMISSION
+---------------------------
+For Reference Parameters:
+
+Transmission by Reference (default):
+- Default transmission for reference parameters to procedures
+- Used when nothing else is specified
+- Formal reference parameter transmitted by reference may be used inside
+  procedure body (or class body) as a local reference variable, which initially
+  is assigned the reference of the corresponding actual parameter
+- Any new reference assigned to the formal parameter inside the procedure (class)
+  has only local effect, not assigned to actual parameter
+- Anything assigned to an attribute of the formal parameter is also assigned
+  to the same attribute of the actual parameter (provided formal parameter
+  has not been assigned a new reference)
+
+Transmission by Name:
+- Only legal for procedures (NOT for classes)
+- Formal reference parameter transmitted by reference may be used inside the
+  procedure body as a local reference variable
+- Any new reference assigned to formal parameter inside procedure (the class) has
+  only local effect
+- Use when new reference should be kept for use outside procedure
+
+Example showing the difference:
+    procedure p(fp); ref(AA) fp;
+    begin fp.x := 3; fp :- new AA; fp.x := 5; ... end;
+
+Invocation p(ap) is equivalent to:
+    begin ref(AA) fp;
+        fp :- ap;
+        begin fp.x := 3; fp :- new AA; fp.x := 5; ... end;
+    end;
+
+After execution: ap.x has been set to 3 (but ap still refers to original object)
+
+
+12. COMPARING REFERENCES
+-------------------------
+Two operators for reference comparison:
+    reference_expression_1  ==   reference_expression_2  (equal)
+    reference_expression_1  =/=  reference_expression_2  (not equal)
+
+Key Points:
+- '==' is true if both expressions refer to the SAME object (identity check)
+- '=/=' is the opposite
+- This compares object identity, NOT object equality
+- Two objects can have identical data but different references
+
+Example:
+    place_1 :- new Place; place_1.longitude := 15; place_1.latitude := 0;
+    place_2 :- new Place; place_2.longitude := 15; place_2.latitude := 0;
+    ! place_1 == place_2 is FALSE (different objects)
+    ! place_1.longitude = place_2.longitude is TRUE (same values)
+
+To check if two objects have equal data (value equality):
+- Must compare all attributes individually
+- No built-in mechanism for this
+- Must write custom comparison procedure
+
+Example equality check:
+    if place_1.longitude = place_2.longitude and
+       place_1.latitude = place_2.latitude
+    then User_message("Place 1 and place 2 have the same coordinates!");
+
+
+13. COPYING OBJECTS
+--------------------
+No built-in tools exist in Simula to make copies of objects (except text objects).
+
+To copy an object:
+1. Create a new object in the same class
+2. Copy data attributes one by one from original to copy
+
+Example:
+    your_budget :- new Budget;
+    your_budget.year := my_budget.year;
+    for month := 1 step 1 until 12 do
+    begin
+        your_budget.expenses_per_month(month)
+            := my_budget.expenses_per_month(month);
+        your_budget.income_per_month(month)
+            := my_budget.income_per_month(month);
+    end;
+
+After copying:
+- Objects are equal (same data values)
+- BUT they are NOT the same (my_budget == your_budget is false)
+- They occupy distinct storage blocks with different addresses
+
+
+14. SUBCLASSES AND INHERITANCE
+-------------------------------
+Syntax:
+    Prefix_class class Class_name;
+    begin
+        ( Declarations of additional attributes );
+    end of Class_name;
+
+Example:
+    class AA; begin ( Declarations of AA-attributes ) end of AA;
+    AA class BB; begin ( Declarations of BB-attributes ) end of BB;
+    AA class CC; begin ( Declarations of CC-attributes ) end of CC;
+    CC class DD; begin ( Declarations of DD-attributes ) end of DD;
+
+Terminology:
+- AA is the "superclass" of BB and CC
+- BB is a "subclass" of AA
+- AA is the "perclass" (ancestor) of BB, CC, DD
+- CC is a "superclass" of DD
+- DD is a "subclass" of both AA (indirectly) and CC (directly)
+
+Inheritance:
+- Every object of a subclass inherits all attributes from its superclass(es)
+- Subclass objects have:
+  1. Inherited attributes from superclass(es)
+  2. Attributes declared in the subclass itself
+- An object in a subclass is usually larger (more attributes) than in superclass
+
+Practical Example (Place Hierarchy):
+    Place class Mountain_top;
+    begin
+        real elevation;
+        ...
+    end of Mountain_top;
+    
+    Place class Town;
+    begin
+        integer number_of_inhabitants;
+        ...
+    end of Town;
+    
+    Place class House;
+    begin
+        real sales_value;
+        ...
+    end of House;
+    
+    House class Detached_house;
+    begin
+        integer number_of_rooms;
+        ...
+    end of Detached_house;
+
+Key Points:
+- No limit to height of class hierarchy
+- Mountain_top objects have: longitude, latitude (from Place) + elevation
+- Detached_house objects have: longitude, latitude (from Place) + 
+  sales_value (from House) + number_of_rooms (from Detached_house)
+
+
+15. REFERENCE VARIABLE ASSIGNMENT RULES
+----------------------------------------
+Legal:
+- A reference variable of type ref(Superclass) can hold a reference to an
+  object in any subclass
+- Example: ref(Place) variable can hold references to Mountain_top, Town, or
+  House objects
+
+Illegal:
+- A reference variable of type ref(Subclass) cannot hold a reference to an
+  object in the superclass (object might not have all required attributes)
+- Example: ref(Office_building) variable cannot hold a reference to a Place object
+
+Example:
+    ref(Place) p1, p2;
+    ref(Office_building) ob;
+    
+    p1 :- new Place;           ! Legal
+    p2 :- new Mountain_top;    ! Legal (Mountain_top is subclass of Place)
+    ob :- new Office_building; ! Legal
+    ob :- new Place;           ! ILLEGAL! (Place doesn't have Office_building attributes)
+
+
+16. THE 'THIS' REFERENCE
+-------------------------
+Inside an inspect imperative or class declaration:
+    this Class_name
+
+Refers to:
+- Inside inspect imperative: the object being inspected
+- Inside class declaration: the 'current' object in the class
+
+Usage:
+- Allows you to get a reference to the current object
+- Useful when you need to pass the current object as a parameter
+
+Example from the text:
+    inspect new Place do
+    begin
+        read;
+        Mountains(mountain_number) :- this Place;  ! Save reference to this object
+    end;
+
+
+IMPORTANT DESIGN PATTERNS AND IDIOMS
+=====================================
+
+Pattern 1: Initialization in Class Imperatives
+-----------------------------------------------
+Use imperatives in class body to initialize objects when created:
+    class Person(id); integer id;
+    begin
+        integer day, month, year;
+        day := prompt_for_int("Day? ");
+        month := prompt_for_int("Month? ");
+        year := prompt_for_int("Year? ");
+    end of Person;
+
+
+Pattern 2: Using Parameters for Array Bounds
+---------------------------------------------
+Parameters can specify array sizes, allowing flexible object sizes:
+    class Country(num_places); integer num_places;
+    begin
+        ref(Place) array Places(1 : num_places);
+        ...
+    end of Country;
+
+
+Pattern 3: Equality Checking
+-----------------------------
+Create custom equality methods since no built-in object comparison exists:
+    Boolean procedure equal(b); ref(Budget) b;
+        equal := year = b.year
+            and equal_arrays(expenses_per_month, b.expenses_per_month)
+            and equal_arrays(income_per_month, b.income_per_month);
+
+
+Pattern 4: Using Inspect for Temporary Direct Access
+----------------------------------------------------
+When you need to access many attributes of an object, use inspect to avoid
+repetitive dot notation:
+    inspect your_budget do
+    begin
+        balance := 0;
+        for month := 1 step 1 until 12 do
+            balance := balance + income_per_month(month)
+                              - expenses_per_month(month);
+    end;
+
+
+Pattern 5: Hierarchy Design
+----------------------------
+Design class hierarchies where:
+- Superclass contains common attributes
+- Subclasses add specialized attributes
+- Allows polymorphic references (superclass ref can point to subclass objects)
+
+
+COMPARISON WITH MODERN OOP
+===========================
+
+Similarities to C++/Java/C#:
+- Classes and objects
+- Inheritance (single inheritance)
+- Member access via dot notation
+- Reference/pointer semantics
+- Constructor-like initialization (imperatives in class body)
+- Polymorphism (superclass references to subclass objects)
+
+Key Differences:
+- Syntax: More verbose, Algol-like rather than C-like
+- No destructors or explicit memory management
+- No access modifiers in basic form (public/private/protected)
+  [Though 'protected' exists, mentioned in Section 9.14]
+- Different operators: ':−' for reference assignment, '==' for identity
+- 'inspect' statement has no direct equivalent (similar to 'with' in some languages)
+- No method overriding shown in this chapter (may be covered later)
+- No interfaces or abstract classes shown in this chapter
+- No constructors with parameters in modern sense (use class parameters instead)
+
+
+HISTORICAL SIGNIFICANCE
+========================
+This chapter documents the FIRST implementation of object-oriented programming
+concepts in a programming language. Concepts introduced here (1967) include:
+
+1. Classes as templates for objects
+2. Objects as instances of classes
+3. Encapsulation of data and procedures
+4. Inheritance and class hierarchies
+5. Polymorphism (superclass references to subclass objects)
+6. Reference types and dynamic object creation
+
+These concepts influenced virtually all subsequent OOP languages including:
+- Smalltalk (1972)
+- C++ (1983)
+- Java (1995)
+- C# (2000)
+
+Understanding Simula helps understand why OOP works the way it does in
+modern languages.
+
+
+ADVICE FROM THE AUTHOR
+======================
+The chapter introduction contains important advice:
+
+"A warning: an appreciable number of new concepts are introduced in this
+chapter, more than you may reasonably expect to be able to digest in a single
+reading. Therefore, take heed of this advice: do not read it all at once; first
+see how the concepts can be used to solve real programming tasks. Study the
+many examples presented here and in the previous and following chapters,
+and try to solve the exercises given at the end of this chapter (most of them
+can be solved without having read or understood all of this chapter)."
+
+This suggests:
+- Study examples first
+- Try exercises
+- Return to theoretical material as needed
+- Practical understanding before complete theoretical understanding
+
+================================================================================

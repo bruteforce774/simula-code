@@ -1,0 +1,31 @@
+! Reference transmission example
+! Demonstrates transmission by reference vs by value
+
+! Assume AA is a class with an integer attribute x, and that the procedure p 
+! is declared as follows:
+!
+! procedure p(fp); ref(AA) fp;
+! begin fp.x := 3; fp :- new AA; fp.x := 5; ... end;
+
+! An invocation p(ap) is then equivalent to the following block:
+!
+! begin ref(AA) fp;
+!     fp :- ap;
+!     begin fp.x := 3; fp :- new AA; fp.x := 5; ... end;
+! end;
+
+! This means that, after the execution of p(ap), ap refers to the object 
+! as it did before the execution, and that ap.x has been set to 3.
+!
+! Note: Transmission of a reference parameter is legal only to procedures.
+! Classes may not have name-parameters. (See Section 9.6).
+! For ordinary, non-reference, parameters transmitted by value, an example 
+! is given in the formal parameter (an example is given in the specification 
+! for the class polygon above). Any assignment to a name-transmitted formal 
+! parameter is at the same time an assignment to the corresponding actual 
+! parameter (this is just as for non-reference parameters transmitted by name).
+! A reference parameter should be transmitted by name to a procedure if the 
+! new reference is to be kept for use outside the procedure (as is the case 
+! for the parameters to the procedure distant_corners); it should be transmitted by
+! reference if the actual parameter is to be protected against new assignments
+! inside the procedure.

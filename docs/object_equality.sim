@@ -1,0 +1,43 @@
+! Object equality comparison example
+! Demonstrates comparing Place objects for equality
+
+! Reference comparisons can be used only to compare addresses of objects, and 
+! not the objects themselves. Two objects will be equal in the sense that all 
+! their data attributes are equal, but have different references. For example, 
+! assume that place_1 and place_2 have been declared as ref(Place) variables, 
+! and that the following imperatives are executed:
+
+! place_1 :- new Place; place_1.longitude := 15; place_1.latitude := 0;
+! place_2 :- new Place; place_2.longitude := 15; place_2.latitude := 0;
+
+! The objects referred to by the variables place_1 and place_2 are then equal
+! in the sense that the variables in the two objects contain the same values.
+! But the two objects are not the same: they occupy distinct storage blocks
+! with different addresses, and therefore have different references. The reference
+! comparison place_1 == place_2 will hence be false.
+
+! If it is desired in a program to determine whether or not two objects are equal (in
+! the sense that their data attributes are equal), it is necessary to check all the data
+! attributes of the two objects, one by one. For example:
+
+! if place_1.longitude = place_2.longitude and
+!    place_1.latitude = place_2.latitude
+! then User_message("Place 1 and place 2 have the same "
+!                   "geographical coordinates!");
+
+! Another example: The class Budget (declared in Figure 9.2) may be extended
+! with a function that may be used to compare two Budgets as follows:
+
+Boolean procedure equal(b); ref(Budget) b;
+    equal := year = b.year
+        and equal_arrays(expenses_per_month, b.expenses_per_month)
+        and equal_arrays(income_per_month, b.income_per_month);
+
+! This function may, for instance, be used as follows (assume that my_budget
+! and your_budget have been declared as ref(Budget) variables):
+
+! if my_budget.equal(your_budget)
+!     then User_message("You and I have equal budgets!");
+
+! The auxiliary function equal_arrays, used in the declaration of the equal procedure,
+! has an almost obvious declaration.

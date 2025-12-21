@@ -1,0 +1,23 @@
+! Person class - Example of class with imperatives
+! Demonstrates initialization code executed when object is created
+
+class Person(ident_number); integer ident_number;
+! The parameter ident_number should uniquely identify each Person;
+begin
+    integer day, month, year;
+    outtext("Enter birth date for person number ");
+    outint(ident_number, 0); outimage;
+    day := prompt_for_int("Day? ");
+    month := prompt_for_int("Month? ");
+    year := prompt_for_int("Year? ");
+end of Person;
+
+! Example usage:
+! ref(Person) array Persons(1 : 10);
+! 
+! for person_number := 1 step 1 until 10 do
+!     Persons(person_number) :- new Person(person_number);
+!
+! The imperatives in the class Person are executed for each Person object that
+! is generated, and serve to prompt the user for values of the data attributes
+! of the Persons.

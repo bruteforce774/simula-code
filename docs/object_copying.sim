@@ -1,0 +1,27 @@
+! Object copying example
+! Demonstrates how to copy objects in Simula
+
+! No built-in tools exist in Simula to make copies of objects (other than text
+! objects). If it is desired to make a copy of an object in a given class, it is
+! easy to proceed as follows. First make a new object in the class, then
+! copy the data attributes, one by one, from the original object to the copy. For
+! example, assuming that the class Budget (Figure 9.2) and suitable variables
+! have been declared, the following imperatives will set your_budget to reference
+! a copy of my_budget:
+
+! your_budget :- new Budget;
+! your_budget.year := my_budget.year;
+! for month := 1 step 1 until 12 do
+! begin
+!     your_budget.expenses_per_month(month)
+!         := my_budget.expenses_per_month(month);
+!     your_budget.income_per_month(month)
+!         := my_budget.income_per_month(month);
+! end;
+
+! After these imperatives have been executed, the objects referred to by my_object
+! and your_object are equal in the sense that all their data attributes are equal.
+! But the two objects are not the same: they occupy distinct storage blocks and
+! my_object == your_object is false.
+! As an exercise extend the class Budget with a declaration of a ref(Budget)
+! function copy that generates a copy of the current Budget.

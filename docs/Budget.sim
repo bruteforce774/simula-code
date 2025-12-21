@@ -1,0 +1,36 @@
+! Budget class - Figure 9.2
+! Manages yearly budget with monthly income and expenses
+
+class Budget;
+begin
+    integer year;
+    integer array income_per_month, expenses_per_month(1 : 12);
+    
+    procedure read;
+    begin integer month;
+        year := prompt_for_int("Year? ");
+        for month := 1 step 1 until 12 do
+        begin
+            outtext("Enter data for month: "); outint(month, 0);
+            breakoutimage;
+            income_per_month(month) := prompt_for_int("Income? ");
+            expenses_per_month(month) := prompt_for_int("Expenses? ");
+        end of month;
+    end of Budget'read;
+    
+    procedure write_month(month); integer month;
+    begin
+        outtext("Month "); outint(month, 2);
+        outtext(": Income: "); outint(income_per_month(month), 6);
+        outtext(", Expenses: "); outint(expenses_per_month(month), 7);
+        outimage;
+    end of Budget'write_month;
+    
+    procedure write_year;
+    begin integer month;
+        outtext("Budget for year: "); outint(year, 0); outimage;
+        for month := 1 step 1 until 12 do
+            write_month(month);
+    end of Budget'write_year;
+    
+end of Budget;

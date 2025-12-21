@@ -1,0 +1,29 @@
+! Inheritance demonstration
+! Shows how objects inherit attributes from superclasses
+
+! Here is an example that shows how these classes may be used. Assume
+! that the variables p1, p2 and ob are declared as follows:
+
+! ref(Place) p1, p2;
+! ref(Office_building) ob;
+
+! and that the following imperatives are executed:
+
+! p1 :- new Place;
+! p2 :- new Mountain_top;
+! ob :- new Office_building;
+
+! The result is shown in Figure 9.9. Observe that an object in a subclass (take
+! for example ob after execution of ob :- new Office_building as
+! an example), in addition to the attributes that are declared in the subclass
+! (the integer variable number_of_floors), also has attributes inherited from the
+! superclasses. Thus, ob inherits sales_value from the superclass House, and
+! longitude and latitude from the 'super-superclass' Place.
+
+! Observe, furthermore, that it is legal to let a Place variable (for instance,
+! p2) contain a reference to an object in a subclass of Place (for instance,
+! Mountain_top). The opposite (an example would be to try to execute ob
+! :- new Place) would, however, be illegal because any object referred to by
+! the ref(Office_building) variable ob should have all Office_building attributes.
+! Rules for what is legal and what is not in such cases are given in Section 9.11.4
+! below.

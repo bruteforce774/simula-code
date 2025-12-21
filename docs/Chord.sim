@@ -1,0 +1,10 @@
+! Chord class - Example showing a class with reference parameters
+! A Chord object represents a chord from Point p to Point q
+
+class Chord(p, q); ref(Point) p, q;
+begin
+    real procedure length;
+    ! Finds the length of this Chord;
+    length := p.distance(q);
+    
+end of Chord;

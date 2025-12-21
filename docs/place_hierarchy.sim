@@ -1,0 +1,52 @@
+! Place hierarchy example
+! Demonstrates practical use of inheritance with geographical classes
+
+! An object in the class Place declared in Figure 9.1 is an object with two
+! variables (longitude and latitude) and two procedures (read and write). The
+! variables can be used to represent the geographical coordinates (longitude and
+! latitude) of a place, the procedures to access the variables in various ways.
+! There are many types of real objects with geographical coordinates, for instance
+! mountain tops, towns and houses. Were we to represent data about
+! these types of places in a program, it would hardly be sufficient to represent
+! each place as an object in the class Place. Place objects have only two
+! real variables (longitude and latitude), but more data is needed to describe
+! the various kinds of place: elevation is certainly needed for mountain tops,
+! number of inhabitants for towns, sales value for houses, etc. We therefore
+! need a class for each kind of place: class Mountain_top, class Town and class
+! House. These classes have much in common: they all contain two variables
+! longitude and latitude, and all have procedures read and write (and quite certainly
+! other procedures as well in a program designed for real use). This
+! means that these classes may be declared as subclasses of Place, for instance
+! as follows:
+
+Place class Mountain_top;
+begin
+    real elevation;
+    ( Declarations of other Mountain_top attributes );
+end of Mountain_top;
+
+Place class Town;
+begin
+    integer number_of_inhabitants;
+    ( Declarations of other Town attributes );
+end of Town;
+
+Place class House;
+begin
+    real sales_value;
+    ( Declarations of other House attributes );
+end of House;
+
+House class Detached_house;
+begin
+    integer number_of_rooms;
+    ( Declarations of other Detached_house attributes );
+end of Detached_house;
+
+House class Office_building;
+begin
+    integer number_of_floors;
+    ( Declarations of other Office_building attributes );
+end of Office_building;
+
+! These five classes form the hierarchy shown in Figure 9.8.

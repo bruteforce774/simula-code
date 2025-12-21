@@ -1,0 +1,18 @@
+! Point class - Example showing reference parameters and function values
+! Demonstrates procedures with reference parameters
+
+class Point(x, y); real x, y;
+! A Point object represents a point in the Cartesian plane
+! with coordinates x and y;
+begin
+    ! An example that shows a procedure with a reference parameter:
+    real procedure distance(p); ref(Point) p;
+    ! Finds the distance from this Point to the Point p;
+    distance := sqrt((x - p.x)**2 + (y - p.y)**2);
+    
+    ! An example that shows a function with a reference as value:
+    ref(Point) procedure midpoint(p); ref(Point) p;
+    ! Generates a new Point midway between this Point and the Point p;
+    midpoint :- new Point((x + p.x)/2, (y + p.y)/2);
+    
+end of Point;

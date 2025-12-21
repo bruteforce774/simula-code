@@ -1,0 +1,43 @@
+! Country class - Example of class with parameters
+! Demonstrates parameterized class declaration
+
+class Country(number_of_places); integer number_of_places;
+begin
+    integer number_of_inhabitants; real area;
+    ref(Place) array Places(1 : number_of_places);
+    
+    procedure read;
+    begin integer place_number;
+        number_of_inhabitants 
+            := prompt_for_int("Enter number of inhabitants> ");
+        area := prompt_for_real("Enter area> ");
+        for place_number := 1 step 1 until number_of_places do
+        begin
+            Places(place_number) :- new Place;
+            Places(place_number).read;
+        end;
+    end of Country'read;
+    
+    procedure write;
+    begin integer place_number;
+        for place_number := 1 step 1 until number_of_places do
+        begin
+            Places(place_number).write;
+        end;
+    end of Country'write;
+    
+end of Country;
+
+! Example usage from the text:
+! ref(Country) array Countries(1 : number_of_countries);
+!
+! procedure Read_countries;
+! begin integer country_number;
+!     for country_number := 1 step 1 until number_of_countries do
+!     begin
+!         outtext("Country number "); outint(country_number, 0); outimage;
+!         Countries(country_number) 
+!             :- new Country(prompt_for_int("How many places? "));
+!         Countries(country_number).read;
+!     end;
+! end of Read_countries;

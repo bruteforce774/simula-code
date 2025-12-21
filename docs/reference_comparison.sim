@@ -1,0 +1,36 @@
+! Reference comparison examples
+! Demonstrates how reference comparisons work in Simula
+
+! A reference comparison is a Boolean expression that has one of the following
+! two forms:
+!     reference_expression_1  ==   reference_expression_2
+!     reference_expression_1  =/=  reference_expression_2
+
+! The first of these comparisons is true if the two reference expressions refer to
+! the same object, false otherwise. The value of the second comparison is the
+! opposite of the value of the first one. A reference comparison is a Boolean
+! expression, and may be used wherever a Boolean expression may legally be used.
+
+! Some examples are:
+
+! for mountain_number := 1 step 1 until number_of_mountains do
+!     if Mountains(mountain_number) =/= none then
+!     begin
+!         outtext("Mountain "); outint(mountain_number, 4);
+!         outtext(" is at "); Mountains(mountain_number).write; outimage;
+!     end
+! else begin
+!     outtext("No data for mountain number");
+!     outint(mountain_number, 0); outimage;
+! end;
+! end;
+
+! if Capitals(country_number) == Ten_largest_cities(country_number, 1) then
+! begin
+!     outtext("The capital is the largest city in the country ");
+!     outint(country_number, 0); outimage;
+! end;
+
+! Reference comparisons can be used only to compare references of objects, and 
+! not the objects themselves. Two objects will be equal in the sense that all 
+! their data attributes are equal, but have different references.

@@ -1,0 +1,64 @@
+! Inspect imperative examples
+! Demonstrates the various forms of the inspect statement
+
+! An inspect imperative can have one of the following three forms:
+
+! (1) inspect reference_expression do
+!     Imperative_1;
+
+! (2) inspect reference_expression do
+!     Imperative_1;
+!     otherwise
+!     Imperative_2;
+
+! (3) inspect reference_expression
+!     Class_name_1 do Imperative_1
+!     Class_name_2 do Imperative_2
+!     ...
+!     when Class_name_n do Imperative_n
+!     otherwise Imperative_ow;
+
+! An inspect imperative on one of the first two forms is executed as follows:
+! (1) The reference_expression is evaluated.
+! (2) If the result is a reference to an object (and not 'none'), Imperative_1
+!     is executed. Inside Imperative_1, every attribute (except those that are
+!     protected, see Section 9.14) declared in Class_name_1 may be used with
+!     any dotting.
+
+! Example using Budget and Place from earlier figures:
+! inspect your_budget do
+! begin integer month, balance;
+!     ! Inside this block, it is legal to use every attribute
+!     ! that is declared in the class Budget;
+!     balance := 0;
+!     for month := 1 step 1 until 12 do
+!         balance := balance + income_per_month(month)
+!                           - expenses_per_month(month);
+!     outtext("Your balance at the end of the year is ");
+!     outint(balance, 7); outimage;
+! end;
+
+! for mountain_number := 1 step 1 until number_of_mountains do
+!     inspect Mountains(mountain_number) do
+!     begin ! Inside this block, it is legal to use every attribute
+!           ! that is declared in the class Place;
+!         outtext("Mountain "); outint(mountain_number, 4);
+!         outtext(" is at "); write; outimage;
+!     end
+! otherwise begin
+!     outtext("No data for mountain ");
+!     outint(mountain_number, 0); outimage;
+! end;
+
+! for mountain_number := 1 step 1 until number_of_mountains do
+! begin
+!     outtext("Do you have data for mountain "); 
+!     outint(mountain_number, 0); outtext("? ");
+!     breakoutimage; inimage;
+!     if inchar = 'y' then inspect new Place do
+!     begin
+!         read; ! This is an invocation of the read procedure
+!               ! declared in the class Place;
+!         Mountains(mountain_number) :- this Place;
+!     end;
+! end;

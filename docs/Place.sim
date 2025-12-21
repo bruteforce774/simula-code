@@ -1,0 +1,21 @@
+! Place class - Figure 9.1
+! Represents a geographical location with longitude and latitude
+
+class Place;
+begin
+    real longitude, latitude;
+    
+    procedure read;
+    begin
+        latitude := prompt_for_real("Degrees north? ");
+        longitude := prompt_for_real("Degrees east? ");
+    end of Place'read;
+    
+    procedure write;
+    begin
+        outfix(latitude, 2, 5); outtext(" degrees north, ");
+        outfix(longitude, 2, 5); outtext(" degrees east.");
+        outimage;
+    end of Place'write;
+    
+end of Place;

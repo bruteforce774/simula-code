@@ -1,0 +1,16 @@
+! Polygon class - Example of reference parameters
+! A Polygon represents a polygon with number_of_points corners
+
+class Polygon(number_of_points); integer number_of_points;
+begin
+    ref(Point) array corner(1 : number_of_points);
+    
+    real procedure length;
+    ! Finds the length of the boundary of this Polygon;
+    begin integer pn; real s;
+        for pn := 2 step 1 until number_of_points do
+            s := s + corner(pn - 1).distance(corner(pn));
+        length := s + corner(number_of_points).distance(corner(1));
+    end of length;
+    
+end of Polygon;
