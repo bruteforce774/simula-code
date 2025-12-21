@@ -62,16 +62,6 @@ If you're familiar with C++/Java/C#, here are key Simula syntax differences:
     class AA; ... end of AA;    class AA { ... }
     AA class BB; ...            class BB extends AA { ... }
 
-RUNNING THE CODE
-----------------
-To run Simula code, you need a Simula compiler. Options include:
-
-1. GNU cim (Simula Compiler)
-   - Open source implementation
-   - Available at: https://github.com/portablesimula/SimulaCompiler
-
-2. Original Simula implementations (historical)
-
 Note: Some examples in this collection are code fragments that show syntax
 and concepts rather than complete runnable programs.
 
@@ -97,15 +87,6 @@ Advanced:
 11. Study inheritance_demo.sim - detailed inheritance behavior
 12. Study distant_corners.sim - complex reference manipulation
 
-HISTORICAL CONTEXT
-------------------
-This chapter (Chapter 9) introduces the core OOP concepts in Simula. The book
-was published in 1989, but documents a language designed in 1962-1967 by
-Ole-Johan Dahl and Kristen Nygaard at the Norwegian Computing Center.
-
-Simula 67 (the version this book covers) became the foundation for object-
-oriented programming as we know it today.
-
 KEY CONCEPTS INTRODUCED
 -----------------------
 1. Classes as templates/patterns for objects
@@ -122,12 +103,6 @@ KEY CONCEPTS INTRODUCED
 12. Subclasses and inheritance
 13. Class hierarchies
 
-ADDITIONAL RESOURCES
---------------------
-- Original Simula website: https://simula67.at.ifi.uio.no/
-- Wikipedia: https://en.wikipedia.org/wiki/Simula
-- "The Birth of Object-Oriented Programming" papers by Dahl and Nygaard
-
 AUTHOR'S NOTE
 -------------
 These examples are extracted from the 1989 textbook. Some conventions and
@@ -140,7 +115,8 @@ This remains excellent advice!
 
 ================================================================================
 Extracted and compiled by: Claude (Anthropic AI Assistant)
+Edited by: Daniel Andreas Wang
 Source: "Object-Oriented Programming With Simula" by Bjørn Kirkerud (1989)
 Chapter 9: Objects and Classes (pages 229-251)
-Date: 2025
+Year: 2025
 ================================================================================
