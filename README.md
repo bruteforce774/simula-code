@@ -1,0 +1,1 @@
+The code files in the root directory are direct type-ins from books on Simula published in 1984 and 1989 by Kirkerud, the directory docs/ contains code based on LLM-processed scans from the 1989 book. Those are focused on demonstrating Simula classes and may not run directly.
