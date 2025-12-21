@@ -1,0 +1,34 @@
+begin
+    real procedure prompt_for_real(prompt); text prompt;
+      begin
+        outtext(prompt); breakoutimage; inimage;
+        prompt_for_real := inreal
+      end;
+
+    class Place;
+    begin
+        real longitude, latitude;
+        
+        procedure read;
+        begin
+            latitude := prompt_for_real("Degrees north? ");
+            longitude := prompt_for_real("Degrees east? ")
+        end;
+        
+        procedure write;
+        begin
+            outfix(latitude, 2, 5); outtext(" degrees north, ");
+            outfix(longitude, 2, 5); outtext(" degrees east.");
+            outimage
+        end;
+        
+    end;
+    
+    ref(Place) myPlace;
+    
+    myPlace :- new Place;
+    myPlace.read;
+    outtext("You entered: ");
+    myPlace.write
+    
+end
